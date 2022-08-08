@@ -83,7 +83,7 @@ public class Home implements Serializable, Cloneable {
   private List<Level>                                 levels;
   private Level                                       selectedLevel;
   private transient CollectionChangeSupport<Level>    levelsChangeSupport;
-  private static List<WallPoint>                      wallPoints;
+  private List<WallPoint>                             wallPoints;
   private List<Wall>                                  walls;
   private transient CollectionChangeSupport<Wall>     wallsChangeSupport;
   private List<Room>                                  rooms;
@@ -1869,8 +1869,12 @@ public class Home implements Serializable, Cloneable {
     
     // Deep copy walls
     destination.walls = Wall.clone(source.walls);
+    destination.wallPoints = WallPoint.clone(source.wallPoints);
     for (int i = 0; i < source.walls.size(); i++) {
-      Wall wall = source.walls.get(i);
+      Wall wall = source.walls.get(i);      
+      destination.walls.get(i).setStartPoint(destination.wallPoints.get(source.wallPoints.indexOf(wall.getStartPoint())));
+      destination.walls.get(i).setEndPoint(destination.wallPoints.get(source.wallPoints.indexOf(wall.getEndPoint())));
+      
       if (source.selectedItems.contains(wall)) {
         destination.selectedItems.add(destination.walls.get(i));
       }

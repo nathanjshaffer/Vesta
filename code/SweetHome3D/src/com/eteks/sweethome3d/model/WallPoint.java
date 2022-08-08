@@ -41,7 +41,7 @@ public class WallPoint extends HomeObject{
     if(joinedWall != null) {
       joinedWalls.add(joinedWall);
     }
-    System.out.println(id);
+    //System.out.println(id);
   }
   
   public Wall[] getJoinedWalls() {
@@ -113,13 +113,17 @@ public class WallPoint extends HomeObject{
     if(!joinedWalls.contains(wall)) {
       joinedWalls.add(wall);
     }
-    
+    System.out.println("add Wall");
   }
   
   public boolean containsJoinedWall(Wall wall) {
     return joinedWalls.contains(wall);
   }
   
+  
+  public void clearJoinedWalls() {
+    joinedWalls.clear();
+  }
 
   /**
    * append walls from one point to this point keeping this point
@@ -193,11 +197,20 @@ public class WallPoint extends HomeObject{
     }
   }
   
-  
 
-  public WallPoint Clone(ArrayList<Wall> wallsCopy, List<Wall> walls) {
+
+  public static List<WallPoint> clone(List<WallPoint> wallPoints) {
+    ArrayList<WallPoint> wallPointsCopy = new ArrayList<WallPoint>(wallPoints.size());
+    for (WallPoint wallPoint : wallPoints) {
+      wallPointsCopy.add(wallPoint.clone());
+    }
+    return wallPointsCopy;
+  }
+
+  public WallPoint clone() {
     WallPoint newPoint = (WallPoint)super.clone();
-    newPoint.setLocation(this.location.x, this.location.y);
+    newPoint.location = new Vector2D(this.location.x, this.location.y);
+    newPoint.joinedWalls = new ArrayList<Wall>();
     return newPoint;
   }
   

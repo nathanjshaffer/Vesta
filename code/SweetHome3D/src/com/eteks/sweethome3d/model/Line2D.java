@@ -22,6 +22,10 @@ public class Line2D extends java.awt.geom.Line2D.Float {
     return (float)ptLineDistSq(point1.x, point1.y, point2.x, point2.y, px, py);
   }
   
+//  public float getSlope() {
+//    getP1();
+//  }
+  
 
   public Vector2D intersection(Line2D.Float line) {
     return intersection(this, line);

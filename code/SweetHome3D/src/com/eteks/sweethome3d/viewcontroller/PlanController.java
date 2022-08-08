@@ -3740,7 +3740,7 @@ public class PlanController extends FurnitureController implements Controller {
   private float getIndicatorMargin() {
     float indicatorPixelMagin = INDICATOR_PIXEL_MARGIN;
     if (getPointerTypeLastMousePress() == View.PointerType.TOUCH) {
-      indicatorPixelMagin *= 3;
+      indicatorPixelMagin *= 6;
     }
     return indicatorPixelMagin / getScale();
   }
@@ -5193,10 +5193,9 @@ public class PlanController extends FurnitureController implements Controller {
         Wall wall = (Wall)item;
         // Remove temporarily listener to avoid side effect
         wall.removePropertyChangeListener(this.wallChangeListener);
-        moveWallStartPoint(wall,
-            wall.getXStart() + dx, wall.getYStart() + dy);
-        moveWallEndPoint(wall,
-            wall.getXEnd() + dx, wall.getYEnd() + dy);
+        
+        wall.setStartLocation(wall.getXStart() + dx, wall.getYStart() + dy);
+        wall.setEndLocation(wall.getXEnd() + dx, wall.getYEnd() + dy);
         resetAreaCache();
         wall.addPropertyChangeListener(this.wallChangeListener);
       } else {
@@ -5214,40 +5213,40 @@ public class PlanController extends FurnitureController implements Controller {
     }
   }
 
-  /**
-   * Moves <code>wall</code> start point to (<code>xStart</code>, <code>yStart</code>)
-   * and the wall point joined to its start point if <code>moveWallAtStart</code> is true.
-   */
-  private static void moveWallStartPoint(Wall wall, float xStart, float yStart) {
-    float oldXStart = wall.getXStart();
-    float oldYStart = wall.getYStart();
-    wall.setXStart(xStart);
-    wall.setYStart(yStart);
-  }
+//  /**
+//   * Moves <code>wall</code> start point to (<code>xStart</code>, <code>yStart</code>)
+//   * and the wall point joined to its start point if <code>moveWallAtStart</code> is true.
+//   */
+//  private static void moveWallStartPoint(Wall wall, float xStart, float yStart) {
+//    float oldXStart = wall.getXStart();
+//    float oldYStart = wall.getYStart();
+//    wall.setXStart(xStart);
+//    wall.setYStart(yStart);
+//  }
+//
+//  /**
+//   * Moves <code>wall</code> end point to (<code>xEnd</code>, <code>yEnd</code>)
+//   * and the wall point joined to its end if <code>moveWallAtEnd</code> is true.
+//   */
+//  private static void moveWallEndPoint(Wall wall, float xEnd, float yEnd) {
+//    float oldXEnd = wall.getXEnd();
+//    float oldYEnd = wall.getYEnd();
+//    wall.setXEnd(xEnd);
+//    wall.setYEnd(yEnd);
+//  }
 
-  /**
-   * Moves <code>wall</code> end point to (<code>xEnd</code>, <code>yEnd</code>)
-   * and the wall point joined to its end if <code>moveWallAtEnd</code> is true.
-   */
-  private static void moveWallEndPoint(Wall wall, float xEnd, float yEnd) {
-    float oldXEnd = wall.getXEnd();
-    float oldYEnd = wall.getYEnd();
-    wall.setXEnd(xEnd);
-    wall.setYEnd(yEnd);
-  }
-
-  /**
-   * Moves <code>wall</code> start point to (<code>x</code>, <code>y</code>)
-   * if <code>editingStartPoint</code> is true or <code>wall</code> end point
-   * to (<code>x</code>, <code>y</code>) if <code>editingStartPoint</code> is false.
-   */
-  private static void moveWallPoint(Wall wall, float x, float y, boolean startPoint) {
-    if (startPoint) {
-      moveWallStartPoint(wall, x, y);
-    } else {
-      moveWallEndPoint(wall, x, y);
-    }
-  }
+//  /**
+//   * Moves <code>wall</code> start point to (<code>x</code>, <code>y</code>)
+//   * if <code>editingStartPoint</code> is true or <code>wall</code> end point
+//   * to (<code>x</code>, <code>y</code>) if <code>editingStartPoint</code> is false.
+//   */
+//  private static void moveWallPoint(Wall wall, float x, float y, boolean startPoint) {
+//    if (startPoint) {
+//      moveWallStartPoint(wall, x, y);
+//    } else {
+//      moveWallEndPoint(wall, x, y);
+//    }
+//  }
 
   /**
    * Moves <code>room</code> point at the given index to (<code>x</code>, <code>y</code>).
@@ -6363,14 +6362,25 @@ public class PlanController extends FurnitureController implements Controller {
     @Override
     public void undo() throws CannotUndoException {
       super.undo();
-      moveWallPoint(this.wall, this.oldX, this.oldY, this.startPoint);
+
+      if(this.startPoint) {
+        this.wall.setStartLocation(oldX, oldY);
+      }
+      else {
+        this.wall.setEndLocation(oldX, oldY);
+      }
       this.controller.selectAndShowItems(Arrays.asList(new Wall [] {this.wall}));
     }
 
     @Override
     public void redo() throws CannotRedoException {
       super.redo();
-      moveWallPoint(this.wall, this.newX, this.newY, this.startPoint);
+      if(this.startPoint) {
+        this.wall.setStartLocation(newX, newY);
+      }
+      else {
+        this.wall.setEndLocation(newX, newY);
+      }
       this.controller.selectAndShowItems(Arrays.asList(new Wall [] {this.wall}));
     }
   }
@@ -10108,11 +10118,20 @@ public class PlanController extends FurnitureController implements Controller {
         newX = point.getX();
         newY = point.getY();
       }
-      moveWallPoint(this.selectedWall, newX, newY, this.startPoint);
+
+      //this.selectedWall.removePropertyChangeListener(wallChangeListener);
+      if(this.startPoint) {
+        this.selectedWall.setStartLocation(newX, newY);
+      }
+      else {
+        this.selectedWall.setEndLocation(newX, newY);
+      }
+      //this.selectedWall.addPropertyChangeListener(wallChangeListener);
 
       planView.setToolTipFeedback(getToolTipFeedbackText(this.selectedWall, true), x, y);
       planView.setAlignmentFeedback(Wall.class, this.selectedWall, newX, newY, false);
       showWallAngleFeedback(this.selectedWall, true);
+      
       ArrayList<DimensionLine> DimensionLines = new ArrayList<DimensionLine>();
       DimensionLines.addAll(getDimensionLinesAlongWall(this.selectedWall));
       for(Wall wall : this.selectedWall.getWallsAtStart()) {
@@ -10148,7 +10167,12 @@ public class PlanController extends FurnitureController implements Controller {
 
     @Override
     public void escape() {
-      moveWallPoint(this.selectedWall, this.oldX, this.oldY, this.startPoint);
+      if(this.startPoint) {
+        this.selectedWall.setStartLocation(oldX, oldY);
+      }
+      else {
+        this.selectedWall.setEndLocation(oldX, oldY);
+      }
       setState(getSelectionState());
     }
 

@@ -177,6 +177,7 @@ public class Wall extends HomeObject implements Selectable, Elevatable {
     this.wallSides = new WallSide[2];
     this.wallSides[WallSide.LEFT_SIDE] = new WallSide(this, WallSide.LEFT_SIDE);
     this.wallSides[WallSide.RIGHT_SIDE] = new WallSide(this, WallSide.RIGHT_SIDE);
+    System.out.println(id);
   }
 
   public void setStartPoint(WallPoint startPoint)
@@ -238,6 +239,10 @@ public class Wall extends HomeObject implements Selectable, Elevatable {
       this.start.setY(yStart);
     }
   }
+  
+  public void setStartLocation(float x, float y) {
+    this.start.setLocation(x, y);
+  }
 
   /**
    * Returns the end point abscissa of this wall.
@@ -271,6 +276,10 @@ public class Wall extends HomeObject implements Selectable, Elevatable {
     if (yEnd != this.end.getY()) {
       this.end.setY(yEnd);
     }
+  }
+  
+  public void setEndLocation(float x, float y) {
+    this.end.setLocation(x, y);
   }
 
   /**
@@ -1175,7 +1184,9 @@ public class Wall extends HomeObject implements Selectable, Elevatable {
     secondWall.setLevel(this.getLevel());
     addWallAtEnd(secondWall.getEndPoint()); 
     this.end.switchJoinedWall(this, secondWall.getStartPoint());
-    
+    System.out.println("this wall:  start - " + this.start.joinedWalls.size() + " end -" + this.end.joinedWalls.size());
+    System.out.println("joined wall:  start - " + secondWall.start.joinedWalls.size() + " end -" + secondWall.end.joinedWalls.size());
+        
     this.end.setLocation(splitPoint);
     
     return secondWall;
@@ -1202,8 +1213,8 @@ public class Wall extends HomeObject implements Selectable, Elevatable {
     // Update walls at start and end point in wallsCopy
     for (int i = 0; i < walls.size(); i++) {
       Wall wall = walls.get(i);
-      wallsCopy.get(i).setStartPoint(wall.getStartPoint().Clone(wallsCopy, walls));
-      wallsCopy.get(i).setEndPoint(wall.getEndPoint().Clone(wallsCopy, walls));
+//      wallsCopy.get(i).setStartPoint(wall.getStartPoint().Clone(wallsCopy, walls));
+//      wallsCopy.get(i).setEndPoint(wall.getEndPoint().Clone(wallsCopy, walls));
       
     }
   }
@@ -1221,18 +1232,7 @@ public class Wall extends HomeObject implements Selectable, Elevatable {
     for (Wall wall : walls) {
       wallsCopy.add(wall.clone());
     }
-    CloneWallPoints(wallsCopy, walls);
     return wallsCopy;
-  }
-
-  private static void CloneWallPoints(ArrayList<Wall> wallsCopy, List<Wall> walls) {
-    // Update walls at start and end point in wallsCopy
-    for (int i = 0; i < walls.size(); i++) {
-      Wall wall = walls.get(i);
-      wallsCopy.get(i).setStartPoint(wall.getStartPoint().Clone(wallsCopy, walls));
-      wallsCopy.get(i).setEndPoint(wall.getEndPoint().Clone(wallsCopy, walls));
-      
-    }
   }
 
   /**
@@ -1387,8 +1387,5 @@ public class Wall extends HomeObject implements Selectable, Elevatable {
     }
     
   }
-  
-  
-  
 }
 
