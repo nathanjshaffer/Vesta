@@ -1575,8 +1575,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
     PathIterator it = getShape().getPathIterator(null);
     for (int i = 0; i < piecePoints.length; i++) {
       it.currentSegment(point);
-      piecePoints[i].x = point[0];
-      piecePoints[i].y = point[1];
+      piecePoints[i] = new Vector2D(point[0], point[1]);
       it.next();
     }
     return piecePoints;

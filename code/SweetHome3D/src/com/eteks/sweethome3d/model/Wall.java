@@ -993,6 +993,9 @@ public class Wall extends HomeObject implements Selectable, Elevatable {
     ArrayList<Vector2D> wallPoints = new ArrayList<Vector2D>();
     wallPoints.addAll(Arrays.asList(this.getSide(0).getShapePoints(includeBaseboards)));
     wallPoints.addAll(Arrays.asList(this.getSide(1).getShapePoints(includeBaseboards)));
+    System.out.println(this.getId());
+    //System.out.println(wallPoints);
+
 
     return wallPoints.toArray(new Vector2D[wallPoints.size()]);
   }

@@ -10119,28 +10119,27 @@ public class PlanController extends FurnitureController implements Controller {
         newY = point.getY();
       }
 
-      //this.selectedWall.removePropertyChangeListener(wallChangeListener);
       if(this.startPoint) {
         this.selectedWall.setStartLocation(newX, newY);
       }
       else {
         this.selectedWall.setEndLocation(newX, newY);
       }
-      //this.selectedWall.addPropertyChangeListener(wallChangeListener);
+      System.out.println(newX + ", " + newY);
 
       planView.setToolTipFeedback(getToolTipFeedbackText(this.selectedWall, true), x, y);
       planView.setAlignmentFeedback(Wall.class, this.selectedWall, newX, newY, false);
       showWallAngleFeedback(this.selectedWall, true);
-      
-      ArrayList<DimensionLine> DimensionLines = new ArrayList<DimensionLine>();
-      DimensionLines.addAll(getDimensionLinesAlongWall(this.selectedWall));
-      for(Wall wall : this.selectedWall.getWallsAtStart()) {
-        DimensionLines.addAll(getDimensionLinesAlongWall(wall));
-      }
-      for(Wall wall : this.selectedWall.getWallsAtEnd()) {
-        DimensionLines.addAll(getDimensionLinesAlongWall(wall));
-      }
-      planView.setDimensionLinesFeedback(DimensionLines);
+//      
+//      ArrayList<DimensionLine> DimensionLines = new ArrayList<DimensionLine>();
+//      DimensionLines.addAll(getDimensionLinesAlongWall(this.selectedWall));
+//      for(Wall wall : this.selectedWall.getWallsAtStart()) {
+//        DimensionLines.addAll(getDimensionLinesAlongWall(wall));
+//      }
+//      for(Wall wall : this.selectedWall.getWallsAtEnd()) {
+//        DimensionLines.addAll(getDimensionLinesAlongWall(wall));
+//      }
+//      planView.setDimensionLinesFeedback(DimensionLines);
       // Ensure point at (x,y) is visible
       planView.makePointVisible(x, y);
     }

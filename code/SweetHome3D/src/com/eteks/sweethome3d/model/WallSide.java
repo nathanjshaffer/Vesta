@@ -1,5 +1,7 @@
 package com.eteks.sweethome3d.model;
 
+import java.util.Arrays;
+
 import com.eteks.sweethome3d.model.Wall;
 
 public class WallSide extends HomeObject {
@@ -152,6 +154,7 @@ public class WallSide extends HomeObject {
   
   public Line2D getJoinLine(WallPoint wallPoint, boolean includeBaseboards) {
     Vector2D[] points = getUnjoinedShapePoints(includeBaseboards);
+    
     if((wall.getStartPoint() == wallPoint && this.side == this.LEFT_SIDE) || (wall.getEndPoint() == wallPoint && this.side == this.RIGHT_SIDE)) {
       return new Line2D(points[0], points[1]);
     }
@@ -195,6 +198,8 @@ public class WallSide extends HomeObject {
   
   public Vector2D [] getShapePoints(boolean includeBaseboards) {
     Vector2D [] points =  getUnjoinedShapePoints(includeBaseboards);
+    System.out.println("side");
+    System.out.println(Arrays.asList(points));
     int startIndex = 0, endIndex = points.length - 1;
     if(this.side == this.RIGHT_SIDE) {
       startIndex = points.length - 1;
@@ -215,6 +220,8 @@ public class WallSide extends HomeObject {
       if(point != null)
       points[endIndex] = point;
     }
+
+    System.out.println(Arrays.asList(points));
     return points;
   }
   

@@ -31,15 +31,15 @@ public class Line2D extends java.awt.geom.Line2D.Float {
     return intersection(this, line);
   }
   public static Vector2D intersection(Line2D.Float a, Line2D.Float b) {
-    float x1 = (float)a.getX1(), y1 = (float)a.getY1(), x2 = (float)a.getX2(), y2 = (float)a.getY2(), x3 = (float)b.getX1(), y3 = (float)b.getY1(),
-            x4 = (float)b.getX2(), y4 = (float)b.getY2();
-    float d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+    double x1 = a.getX1(), y1 = a.getY1(), x2 = a.getX2(), y2 = a.getY2(), x3 = b.getX1(), y3 = b.getY1(),
+            x4 = b.getX2(), y4 = b.getY2();
+    double d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
     if (d == 0) {
         return null;
     }
 
-    float xi = ((x3 - x4) * (x1 * y2 - y1 * x2) - (x1 - x2) * (x3 * y4 - y3 * x4)) / d;
-    float yi = ((y3 - y4) * (x1 * y2 - y1 * x2) - (y1 - y2) * (x3 * y4 - y3 * x4)) / d;
+    double xi = ((x3 - x4) * (x1 * y2 - y1 * x2) - (x1 - x2) * (x3 * y4 - y3 * x4)) / d;
+    double yi = ((y3 - y4) * (x1 * y2 - y1 * x2) - (y1 - y2) * (x3 * y4 - y3 * x4)) / d;
 
     return new Vector2D(xi, yi);
   }
